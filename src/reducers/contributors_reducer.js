@@ -1,5 +1,5 @@
 import merge from 'lodash/merge';
-import {  RECEIVE_ALL_CONTRIBUTORS  } from '../actions/repos_actions';
+import {  RECEIVE_ALL_CONTRIBUTORS, RECEIVE_INTERNAL_CONTRIBUTIONS  } from '../actions/repos_actions';
 
 const contributorsReducer = (state = {}, action) => {
   Object.freeze(state);

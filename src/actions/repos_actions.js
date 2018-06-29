@@ -3,6 +3,7 @@ import parse from 'parse-link-header';
 
 export const RECEIVE_ALL_REPOS = 'RECEIVE_ALL_REPOS';
 export const RECEIVE_ALL_CONTRIBUTORS = 'RECEIVE_ALL_CONTRIBUTORS';
+export const RECEIVE_INTERNAL_CONTRIBUTIONS = 'RECEIVE_INTERNAL_CONTRIBUTIONS';
 
 export const receiveAllRepos = repos => {
   return {
@@ -15,6 +16,13 @@ export const receiveAllContributors = contributors => {
   return {
     type: RECEIVE_ALL_CONTRIBUTORS,
     contributors
+  };
+};
+
+export const receiveInternalContributions = contributor => {
+  return {
+    type: RECEIVE_INTERNAL_CONTRIBUTIONS,
+    contributor
   };
 };
 
@@ -35,3 +43,14 @@ export const fetchContributors = (owner, name) => dispatch => {
     return dispatch(receiveAllContributors(contributors));
   });
 };
+
+export const fetchInternalContributors = (owner, name) => dispatch => {
+  return fetchAPI.fetchContributors(owner,name).then(response => {
+    return response.json().then(contributors => {
+      const user = contributors[0].login;
+      const count = contributors[0].contributions;
+      return {user, count};}).then(contributor => {
+        return dispatch(receiveInternalContributions(contributor));
+      });
+    });
+  };

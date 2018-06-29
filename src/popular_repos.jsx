@@ -1,17 +1,18 @@
 import React from 'react';
 
-
 class Popular extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       sorted: 'stars',
+      users: 'internal',
       repos: this.props.repos,
       contributors: this.props.contributors
     };
     this.handleStars = this.handleStars.bind(this);
     this.handleForks = this.handleForks.bind(this);
     this.handleContributors = this.handleContributors.bind(this);
+    this.handleInternalContributors = this.handleInternalContributors.bind(this);
   }
 
   componentDidMount() {
@@ -61,6 +62,12 @@ class Popular extends React.Component {
     repos.forEach(repo => {
       this.props.fetchContributors(repo.owner.login, repo.name);
     });
+  }
+
+  handleInternalContributors(e) {
+    this.setState({ users: e.target.value });
+    let repos = this.state.repos;
+    this.props.fetchInternalContributors(repos[0].owner.login, repos[0].name);
 
   }
 
@@ -94,8 +101,23 @@ class Popular extends React.Component {
             <label>Contributors</label>
             </div>
         </fieldset>
-          <ul>
+          <ul className="sort-by-repos">
+            <label>Sorted repos by stars/forks/contributors:</label>
             {this.renderRepos()}
+          </ul>
+          <fieldset>
+            <legend>Sort contributors by:</legend>
+            <div>
+              <input onClick={this.handleInternalContributors} type="radio" name="contributors" value="users" defaultChecked />
+              <label>Internal</label>
+            </div>
+            <div>
+              <input type="radio" name="contributors" value="users"/>
+              <label>External</label>
+            </div>
+          </fieldset>
+          <ul>
+            <label>Sorted internal/external contributors:</label>
           </ul>
       </div>
     );

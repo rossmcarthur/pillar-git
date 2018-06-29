@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import Popular from './popular_repos';
-import { fetchRepos, fetchContributors } from './actions/repos_actions';
+import { fetchRepos, fetchContributors, fetchInternalContributors } from './actions/repos_actions';
 
 const mapStateToProps = state => {
   return {
@@ -12,7 +12,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchRepos: () => dispatch(fetchRepos()),
-    fetchContributors: (owner, name) => dispatch(fetchContributors(owner, name))
+    fetchContributors: (owner, name) => dispatch(fetchContributors(owner, name)),
+    fetchInternalContributors: (owner,name) => dispatch(fetchInternalContributors(owner, name))
   };
 };
 
