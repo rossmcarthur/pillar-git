@@ -7,7 +7,7 @@ class Popular extends React.Component {
     this.state = {
       sorted: 'stars',
       repos: this.props.repos,
-      cont: null
+      contributors: this.props.contributors
     };
     this.handleStars = this.handleStars.bind(this);
     this.handleForks = this.handleForks.bind(this);
@@ -25,12 +25,20 @@ class Popular extends React.Component {
       });
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.contributors !== prevProps.contributors) {
+      const cont = this.props.contributors;
+      const sorted = Object.keys(cont).sort((a, b) => cont[b] - cont[a]);
+      this.setState({ contributors: sorted });
+    }
+  }
+
   handleStars(e) {
     this.setState({ sorted: e.target.value });
     let repos = this.state.repos;
     repos = repos.sort((a, b) => {
-      const starsA = a.stargazers_count;
-      const starsB = b.stargazers_count;
+      let starsA = a.stargazers_count;
+      let starsB = b.stargazers_count;
       return starsB - starsA;
     });
     this.setState({ repos });
@@ -40,8 +48,8 @@ class Popular extends React.Component {
     this.setState({ sorted: e.target.value });
     let repos = this.state.repos;
     repos = repos.sort((a, b) => {
-      const forksA = a.forks_count;
-      const forksB = b.forks_count;
+      let forksA = a.forks_count;
+      let forksB = b.forks_count;
       return forksB - forksA;
     });
     this.setState({ repos });
@@ -50,18 +58,21 @@ class Popular extends React.Component {
   handleContributors(e) {
     this.setState({ sorted: e.target.value });
     let repos = this.state.repos;
-    this.props.fetchContributors(repos[0].owner.login, repos[0].name)
+    repos.forEach(repo => {
+      this.props.fetchContributors(repo.owner.login, repo.name);
+    });
 
   }
 
-
   renderRepos() {
-    if (Object.values(this.state.repos).length > 0) {
+    if (Object.values(this.state.repos).length > 0 && this.state.sorted !== 'contributors') {
       return this.state.repos.map( (repo, i) => {
         return <li key={i}>{repo.name}</li>;
       });
-    } else {
-      return null;
+    } else if (Object.values(this.state.contributors).length > 0 && this.state.sorted === 'contributors'){
+      return this.state.contributors.map( (cont, i) => {
+        return <li key={i}>{cont}</li>;
+      });
     }
   }
 

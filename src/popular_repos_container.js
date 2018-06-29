@@ -1,12 +1,11 @@
 import { connect } from 'react-redux';
 import Popular from './popular_repos';
 import { fetchRepos, fetchContributors } from './actions/repos_actions';
-import { withRouter } from 'react-router-dom';
 
-const mapStateToProps = (state, ownProps) => {
-  debugger
+const mapStateToProps = state => {
   return {
-    repos: state.entities.repos
+    repos: state.entities.repos,
+    contributors: state.entities.contributors
   };
 };
 
@@ -17,4 +16,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Popular));
+export default connect(mapStateToProps, mapDispatchToProps)(Popular);
