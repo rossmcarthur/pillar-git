@@ -17,7 +17,6 @@ class Popular extends React.Component {
 
   componentDidMount() {
     this.props.fetchRepos().then(res => {
-      debugger
     const repos = res.repos.sort((a, b) => {
       const starsA = a.stargazers_count;
       const starsB = b.stargazers_count;
