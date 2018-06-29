@@ -1,0 +1,13 @@
+ul {
+  list-style: none;
+}
+
+fieldset {
+  width: 150px;
+}
+
+.repo-sort-label
+ {
+  font-size: 20px;
+  margin-bottom: 20px;
+}

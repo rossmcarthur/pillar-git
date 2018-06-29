@@ -6,7 +6,7 @@ const usersReducer = (state = {}, action) => {
 
   switch(action.type) {
       case RECEIVE_INTERNAL_CONTRIBUTIONS:
-      return merge({}, state, { [action.contributor.user]: action.contributor.count });
+      return merge({}, state, action.contributors);
     default:
       return state;
   }

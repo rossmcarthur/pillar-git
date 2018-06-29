@@ -5,7 +5,8 @@ import { fetchRepos, fetchContributors, fetchInternalContributors } from './acti
 const mapStateToProps = state => {
   return {
     repos: state.entities.repos,
-    contributors: state.entities.contributors
+    contributors: state.entities.contributors,
+    users: state.entities.users
   };
 };
 

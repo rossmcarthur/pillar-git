@@ -19,10 +19,10 @@ export const receiveAllContributors = contributors => {
   };
 };
 
-export const receiveInternalContributions = contributor => {
+export const receiveInternalContributions = contributors => {
   return {
     type: RECEIVE_INTERNAL_CONTRIBUTIONS,
-    contributor
+    contributors
   };
 };
 
@@ -45,12 +45,9 @@ export const fetchContributors = (owner, name) => dispatch => {
 };
 
 export const fetchInternalContributors = (owner, name) => dispatch => {
-  return fetchAPI.fetchContributors(owner,name).then(response => {
+  return fetchAPI.fetchAllContributors(owner,name).then(response => {
     return response.json().then(contributors => {
-      const user = contributors[0].login;
-      const count = contributors[0].contributions;
-      return {user, count};}).then(contributor => {
-        return dispatch(receiveInternalContributions(contributor));
+        return dispatch(receiveInternalContributions(contributors));
       });
     });
   };

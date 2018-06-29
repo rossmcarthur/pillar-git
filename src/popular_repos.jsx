@@ -7,7 +7,7 @@ class Popular extends React.Component {
       sorted: 'stars',
       users: 'internal',
       repos: this.props.repos,
-      contributors: this.props.contributors
+      contributors: this.props.contributors,
     };
     this.handleStars = this.handleStars.bind(this);
     this.handleForks = this.handleForks.bind(this);
@@ -17,13 +17,14 @@ class Popular extends React.Component {
 
   componentDidMount() {
     this.props.fetchRepos().then(res => {
-      const repos = res.repos.sort((a, b) => {
-        const starsA = a.stargazers_count;
-        const starsB = b.stargazers_count;
-        return starsB - starsA;
-      });
-        this.setState({ repos });
-      });
+      debugger
+    const repos = res.repos.sort((a, b) => {
+      const starsA = a.stargazers_count;
+      const starsB = b.stargazers_count;
+      return starsB - starsA;
+    });
+      this.setState({ repos, reposPage: this.state.reposPage + 1 });
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -67,16 +68,30 @@ class Popular extends React.Component {
   handleInternalContributors(e) {
     this.setState({ users: e.target.value });
     let repos = this.state.repos;
-    this.props.fetchInternalContributors(repos[0].owner.login, repos[0].name);
-
+    repos.forEach(repo => {
+      this.props.fetchInternalContributors(repo.owner.login, repo.name);
+    });
+    let users = {};
+    for (let user in this.state.contributors) {
+      if (users[user] === undefined) {
+        users[user] = this.state.contributors[user];
+      } else {
+        users[user] += this.state.contributors[user];
+      }
+    }
+    this.setState({ users });
   }
 
   renderRepos() {
-    if (Object.values(this.state.repos).length > 0 && this.state.sorted !== 'contributors') {
+    if (Object.values(this.state.repos).length > 0 && this.state.sorted === 'stars') {
       return this.state.repos.map( (repo, i) => {
-        return <li key={i}>{repo.name}</li>;
+        return <li key={i}>Repo: &nbsp;{repo.name}</li>;
       });
-    } else if (Object.values(this.state.contributors).length > 0 && this.state.sorted === 'contributors'){
+    } else if (Object.values(this.state.repos).length > 0 && this.state.sorted === 'forks') {
+      return this.state.repos.map( (repo, i) => {
+        return <li key={i}>Repo: &nbsp;{repo.name}</li>;
+      });
+    }else if (Object.values(this.state.contributors).length > 0 && this.state.sorted === 'contributors'){
       return this.state.contributors.map( (cont, i) => {
         return <li key={i}>{cont}</li>;
       });
@@ -102,7 +117,7 @@ class Popular extends React.Component {
             </div>
         </fieldset>
           <ul className="sort-by-repos">
-            <label>Sorted repos by stars/forks/contributors:</label>
+            <label className='repo-sort-label'>Sorted repos by stars/forks/contributors:</label>
             {this.renderRepos()}
           </ul>
           <fieldset>
